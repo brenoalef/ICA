@@ -13,6 +13,7 @@ dataset = np.append(dataset, [[np.random.uniform(-1, 1), x1, 0] for x1 in np.ran
 dataset = np.append(dataset, [[x1, np.random.uniform(14, 15), 1] for x1 in np.random.uniform(10, 15, 10)], axis=0)
 
 accuracy = np.zeros((20, 1))
+data = []
 for i in range(20):
     X_train, X_test, Y_train, Y_test = train_test_split(dataset[:, :2],
     dataset[:, 2], test_size=0.50)
@@ -23,8 +24,10 @@ for i in range(20):
     Y_hat = perceptron.predict(X_test)
 
     accuracy[i] = 1 - np.sum(np.abs(Y_hat - Y_test)) / Y_hat.size
+    data.append([X_train, X_test, Y_train, Y_test])
 
-print(np.mean(accuracy))
+print("Accuracy", np.mean(accuracy))
+X_train, X_test, Y_train, Y_test = data[(np.abs(accuracy - np.mean(accuracy))).argmin()]
 
 cm_bright = ListedColormap(["#0000FF", "#FF0000"])
 plt.figure(figsize=(7,5))
@@ -45,7 +48,7 @@ plt.title("Test data")
 plt.show()
 
 conf_matrix = confusion_matrix(Y_test, Y_hat)
-print(conf_matrix)
+print("Confusion Matrix", conf_matrix)
 
 labels = ["Class 0", "Class 1"]
 fig = plt.figure()

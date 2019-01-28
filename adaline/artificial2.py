@@ -24,8 +24,8 @@ for i in range(20):
     mse[i] = ((Y_test - Y_hat)**2).mean(axis=0)
     rmse[i] = mse[i]**(1./2)
 
-print(np.std(mse, axis=0))
-print(np.std(rmse, axis=0))
+print("Standard Deviation (MSE)", np.std(mse, axis=0))
+print("Standard Deviation (RMSE)",np.std(rmse, axis=0))
 
 cm_bright = ListedColormap(["#0000FF", "#FF0000"])
 plt.figure(figsize=(7,5))

@@ -14,6 +14,7 @@ Y[iris_datasets.target != 0] = 0
 Y[iris_datasets.target == 0] = 1
 
 accuracy = np.zeros((20, 1))
+data = []
 for i in range(20):
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.80)
     Y_train = Y_train.reshape((X_train.shape[0], 1))
@@ -23,8 +24,11 @@ for i in range(20):
     Y_hat = perceptron.predict(X_test)
 
     accuracy[i] = 1 - np.sum(np.abs(Y_hat - Y_test)) / Y_hat.size
+    data.append([X_train, X_test, Y_train, Y_test])
 
-print(np.mean(accuracy))
+print("Accuracy", np.mean(accuracy))
+X_train, X_test, Y_train, Y_test = data[(np.abs(accuracy - np.mean(accuracy))).argmin()]
+
 
 cm_bright = ListedColormap(["#0000FF", "#FF0000"])
 plt.figure(figsize=(7,5))
@@ -49,7 +53,7 @@ plt.ylabel("Petal width")
 plt.show()
 
 conf_matrix = confusion_matrix(Y_test, Y_hat)
-print(conf_matrix)
+print("Confusion Matrix", conf_matrix)
 
 labels = ["Others", "Setosa"]
 fig = plt.figure()

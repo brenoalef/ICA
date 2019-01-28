@@ -20,5 +20,5 @@ for i in range(20):
     Y_hat = perceptron.predict(X_test)
     accuracy[i] = 1 - np.sum(np.abs(np.sum(Y_hat - Y_test))) / Y_hat.size
 
-print(np.mean(accuracy))
-print(np.std(accuracy))
+print("Accuracy", np.mean(accuracy))
+print("Standard Deviation (accuracy)", np.std(accuracy, axis=0))
