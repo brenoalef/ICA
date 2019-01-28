@@ -5,6 +5,7 @@ from matplotlib.colors import ListedColormap
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from perceptron import Perceptron
+import time
 
 
 dataset = np.array([[x1, np.random.uniform(-1, 1), 0] for x1 in np.random.uniform(-1, 1, 10)])
@@ -14,18 +15,23 @@ dataset = np.append(dataset, [[x1, np.random.uniform(14, 15), 1] for x1 in np.ra
 
 accuracy = np.zeros((20, 1))
 data = []
+mean_time = 0
 for i in range(20):
     X_train, X_test, Y_train, Y_test = train_test_split(dataset[:, :2],
     dataset[:, 2], test_size=0.50)
     Y_train = Y_train.reshape((X_train.shape[0], 1))
     Y_test = Y_test.reshape((X_test.shape[0], 1))
+
+    start_time = time.clock()
     perceptron = Perceptron(num_features = 2)
     perceptron.fit(X_train,Y_train)
     Y_hat = perceptron.predict(X_test)
+    mean_time += (time.clock() - start_time)/20    
 
     accuracy[i] = 1 - np.sum(np.abs(Y_hat - Y_test)) / Y_hat.size
     data.append([X_train, X_test, Y_train, Y_test])
 
+print("Mean execution time", mean_time)
 print("Accuracy", np.mean(accuracy))
 X_train, X_test, Y_train, Y_test = data[(np.abs(accuracy - np.mean(accuracy))).argmin()]
 
