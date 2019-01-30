@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
@@ -17,7 +16,7 @@ for i in range(iris_datasets.target.shape[0]):
 
 accuracy = np.zeros((20, 1))
 mean_time = 0
-for i in range(20):
+for i in range(1):
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.80)
 
     start_time = time.clock()
@@ -32,3 +31,39 @@ for i in range(20):
 print("Mean execution time", mean_time)
 print("Accuracy", np.mean(accuracy))
 print("Standard Deviation (accuracy)", np.std(accuracy, axis=0))
+
+n_classes = 3
+plot_colors = ["#AA0000", "#00AA00", "#0000AA"]
+plot_step = 0.1
+cm_dark = ListedColormap(['#FFCCCC', '#CCFFCC', '#CCCCFF'])
+cm_bright = ListedColormap(plot_colors)
+for pairidx, pair in enumerate([[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]]):
+    clf = Sigmoidal(num_features = 2)
+    clf.fit(X_train[:, pair], Y_train)
+    
+    plt.subplot(2, 3, pairidx + 1)
+    
+    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    xx = np.array([[x, y] for x in np.arange(x_min, x_max, plot_step) for y in np.arange(y_min, y_max, plot_step)])
+    plt.tight_layout(h_pad=0.5, w_pad=0.5, pad=2.5)
+
+    Z = clf.predict(xx)
+
+    plt.scatter(xx[:, 0], xx[:, 1], c=Z.argmax(axis=1), cmap=cm_dark)
+
+    plt.xlabel(iris_datasets.feature_names[pair[0]])
+    plt.ylabel(iris_datasets.feature_names[pair[1]])
+
+    for i, color in zip(range(n_classes), plot_colors):
+        idx = np.where(Y.argmax(axis=1) == i)
+        plt.scatter(X[idx, 0], X[idx, 1], c=color, label=iris_datasets.target_names[i],
+                    cmap=cm_bright, edgecolor='black', s=15)
+    
+
+
+plt.suptitle("Decision surface using paired features")
+plt.legend(loc='lower right', borderpad=0, handletextpad=0)
+plt.axis("tight")
+plt.show()
+

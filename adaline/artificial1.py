@@ -1,16 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
+from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from adaline import Adaline
 import time
 
 
 def f(x):
-    return 3*x + 2 + np.random.rand()*3
+    return 3*x + 2 + np.random.uniform(-0.5, 0.5)
 
 
-dataset = np.array([[x, f(x)] for x in np.random.uniform(-30, 30, 100)])
+dataset = np.array([[x, f(x)] for x in np.random.uniform(-5, 5, 100)])
+min_max_scaler = preprocessing.MinMaxScaler()
+dataset = min_max_scaler.fit_transform(dataset)
 
 mse = np.zeros((20, 1))
 rmse = np.zeros((20, 1))
@@ -23,7 +26,7 @@ for i in range(20):
     Y_test = Y_test.reshape((Y_test.shape[0], 1))
     
     start_time = time.clock()
-    adaline = Adaline(n_iter=100)
+    adaline = Adaline(eta=0.01, n_iter=200)
     adaline.fit(X_train,Y_train)
     Y_hat = adaline.predict(X_test)
     mean_time += (time.clock() - start_time)/20    
@@ -35,15 +38,12 @@ print("Mean execution time", mean_time)
 print("Standard Deviation (MSE)", np.std(mse, axis=0))
 print("Standard Deviation (RMSE)",np.std(rmse, axis=0))
 
-aa = np.linspace(np.min(X_test), np.max(X_test), num=90)
+aa = np.linspace(0, 1, num=100)
 aa = aa.reshape((aa.shape[0], 1))
 fig, ax = plt.subplots()
 Z = adaline.predict(aa)
-Z[Z >= 0] = 1
-Z[Z != 1] = 0
-plt.plot(aa, Z)
-plt.plot(X_test[Y_test >= 0], Y_test[Y_test >= 0], "o", label="f(x) >= 0")
-plt.plot(X_test[Y_test < 0], Y_test[Y_test < 0], "x", label="f(x) <= 0")
+plt.plot(aa, Z, label="Adaline output")
+plt.plot(dataset[:, 0], dataset[:, 1], ".", label="Initial data")
 plt.title("Visualize the data")
 leg = plt.legend(loc='lower right', ncol=2, shadow=True, fancybox=True)
 leg.get_frame().set_alpha(0.5)

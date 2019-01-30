@@ -23,17 +23,17 @@ for i in range(20):
     Y_test = Y_test.reshape((X_test.shape[0], 1))
     
     start_time = time.clock()
-    perceptron = Perceptron(num_features = 4)
+    perceptron = Perceptron()
     perceptron.fit(X_train,Y_train)
     Y_hat = perceptron.predict(X_test)
     mean_time += (time.clock() - start_time)/20    
 
     accuracy[i] = 1 - np.sum(np.abs(Y_hat - Y_test)) / Y_hat.size
-    data.append([X_train, X_test, Y_train, Y_test])
+    data.append([X_train, X_test, Y_train, Y_test, Y_hat])
 
 print("Mean execution time", mean_time)
 print("Accuracy", np.mean(accuracy))
-X_train, X_test, Y_train, Y_test = data[(np.abs(accuracy - np.mean(accuracy))).argmin()]
+X_train, X_test, Y_train, Y_test, Y_hat = data[(np.abs(accuracy - np.mean(accuracy))).argmin()]
 
 
 cm_bright = ListedColormap(["#0000FF", "#FF0000"])
@@ -47,7 +47,6 @@ plt.xlabel("Petal length")
 plt.ylabel("Petal width")
 plt.show()
 
-cm_bright = ListedColormap(["#0000FF", "#FF0000"])
 plt.figure(figsize=(7,5))
 plt.scatter(X_test[:,0], X_test[:,1], c=Y_test[:, 0], cmap=cm_bright)
 plt.scatter(None, None, color = "r", label="Setosa")

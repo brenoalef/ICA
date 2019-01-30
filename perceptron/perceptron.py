@@ -1,13 +1,13 @@
 import numpy as np
 
 class Perceptron:
-    def __init__(self, eta = 0.01, num_features = 3, n_iter = 2000):
-        self.w = np.zeros((num_features + 1, 1))
+    def __init__(self, eta = 0.01, n_iter = 2000):
         self.eta = eta
         self.n_iter = n_iter
 
     def fit(self, X, Y):
         X = np.hstack((np.ones((X.shape[0],1)), X))
+        self.w  = np.random.uniform(-1, 1, (X.shape[1], 1))
         for n in range(self.n_iter):
             misses = 0
             for i in range(len(X)):

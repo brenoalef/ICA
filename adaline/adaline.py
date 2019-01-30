@@ -16,6 +16,7 @@ class Adaline:
             self.w += self.eta * X.T.dot(error)
             cost = 1./2 * np.sum(error**2)
             self.error.append(cost)
+        return self
 
     def predict(self, X):
         X = np.hstack((np.ones((X.shape[0],1)), X))

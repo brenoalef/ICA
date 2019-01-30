@@ -1,16 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from adaline import Adaline
 import time
 
 
 def f(x1, x2):
-    return 3*x1 - 2*x2 + 5 + np.random.rand()
+    return 3*x1 - 2*x2 + 5 + np.random.uniform(-0.5, 0.5)
 
 
 dataset = np.array([[x1, x2, f(x1, x2)] for x1 in np.random.uniform(-30, 30, 20) for x2 in np.random.uniform(-30, 30, 20)])
+min_max_scaler = preprocessing.MinMaxScaler()
+dataset = min_max_scaler.fit_transform(dataset)
 
 mse = np.zeros((20, 1))
 rmse = np.zeros((20, 1))
@@ -21,7 +24,7 @@ for i in range(20):
     Y_test = Y_test.reshape((Y_test.shape[0], 1))
 
     start_time = time.clock()
-    adaline = Adaline(eta = 0.00001, n_iter=400)
+    adaline = Adaline(eta = 0.01, n_iter=200)
     adaline.fit(X_train,Y_train)
     Y_hat = adaline.predict(X_test)
     mean_time += (time.clock() - start_time)/20    
@@ -33,13 +36,25 @@ print("Mean execution time", mean_time)
 print("Standard Deviation (MSE)", np.std(mse, axis=0))
 print("Standard Deviation (RMSE)",np.std(rmse, axis=0))
 
-cm_bright = ListedColormap(["#0000FF", "#FF0000"])
-plt.figure(figsize=(7,5))
-plt.scatter(X_test[:,0], X_test[:,1], c=[1 if y>= 0 else 0 for y in Y_test[:, 0]], cmap=cm_bright)
-plt.scatter(None, None, color = "r", label="f(x1, x2) >= 0")
-plt.scatter(None, None, color = "b", label="f(x1, x2) < 0")
-plt.legend()
+
+xx = np.array([[x, y] for x in np.arange(0, 1, 0.01) for y in np.arange(0, 1, 0.01)])
+Z = adaline.predict(xx)
+
+fig = plt.figure()
+ax = Axes3D(fig)
 plt.title("Visualize the data")
 plt.xlabel("x1")
 plt.ylabel("x2")
+
+ax.scatter(dataset[:, 0], dataset[:, 1], dataset[:, 2], c="r", marker="o", zdir="z")
+plt.show()
+
+fig = plt.figure()
+ax = Axes3D(fig)
+plt.title("Visualize the data")
+plt.xlabel("x1")
+plt.ylabel("x2")
+
+ax.plot(xx[:, 0], xx[:, 1], Z[:, 0], ".", zdir="z")
+ax.scatter(dataset[:, 0], dataset[:, 1], dataset[:, 2], c="r", marker="o")
 plt.show()
