@@ -13,11 +13,13 @@ def f(x1, x2):
 
 dataset = np.array([[x1, x2, f(x1, x2)] for x1 in np.random.uniform(-30, 30, 20) for x2 in np.random.uniform(-30, 30, 20)])
 min_max_scaler = preprocessing.MinMaxScaler()
-dataset = min_max_scaler.fit_transform(dataset)
+min_max_scaler.fit(dataset)
+dataset = min_max_scaler.transform(dataset)
 
 mse = np.zeros((20, 1))
 rmse = np.zeros((20, 1))
 mean_time = 0
+#cost = []
 for i in range(20):
     X_train, X_test, Y_train, Y_test = train_test_split(dataset[:, :2], dataset[:, 2], test_size=0.80)
     Y_train = Y_train.reshape((Y_train.shape[0], 1))
@@ -31,11 +33,20 @@ for i in range(20):
 
     mse[i] = ((Y_test - Y_hat)**2).mean(axis=0)
     rmse[i] = mse[i]**(1./2)
+    #cost.append(adaline.error) 
 
 print("Mean execution time", mean_time)
 print("Standard Deviation (MSE)", np.std(mse, axis=0))
 print("Standard Deviation (RMSE)",np.std(rmse, axis=0))
 
+'''
+fig, ax = plt.subplots()
+plt.plot(range(1, len(cost[0]) + 1), cost[0], "o-")
+plt.title("Cost")
+plt.xlabel("epoch")
+plt.ylabel("cost")
+plt.show()
+'''
 
 xx = np.array([[x, y] for x in np.arange(0, 1, 0.01) for y in np.arange(0, 1, 0.01)])
 Z = adaline.predict(xx)
