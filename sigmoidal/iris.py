@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from sklearn import datasets
-from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sigmoidal import Sigmoidal
 import time
@@ -16,7 +15,7 @@ for i in range(iris_datasets.target.shape[0]):
 
 accuracy = np.zeros((20, 1))
 mean_time = 0
-for i in range(1):
+for i in range(20):
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.80)
 
     start_time = time.clock()

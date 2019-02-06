@@ -1,8 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
-from sklearn import datasets
-from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sigmoidal import Sigmoidal
 import time
