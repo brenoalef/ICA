@@ -3,11 +3,12 @@ from sklearn.utils import shuffle
 
 
 class Sigmoidal:
-    def __init__(self, eta = 0.01, num_features = 3, n_iter = 2000, c=3, type="tan"):
+    def __init__(self, eta = 0.01, num_features = 3, n_iter = 2000, c=3, type="tan", tol=0.4):
         self.w = np.random.uniform(-1, 1, (c, num_features + 1))
         self.eta = eta
         self.n_iter = n_iter
         self.type=type
+        self.tol = tol
 
     def __activation(self, u):
         if self.type == "log":
@@ -29,7 +30,7 @@ class Sigmoidal:
             for i in range(len(X)):
                 u = self.w.dot(X[i])
                 y = self.__activation(u)
-                if any(y != Y[i]):
+                if any(abs(y - Y[i]) > self.tol):
                     misses += 1
                     error = Y[i] - y
                     for c in range(self.w.shape[0]):
