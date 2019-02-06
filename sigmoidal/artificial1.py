@@ -9,8 +9,8 @@ import time
 
 
 dataset = np.array([[np.random.uniform(4, 6), x1, 1, 0, 0] for x1 in np.random.uniform(14, 15, 50)])
-dataset = np.append(dataset, [[x1, np.random.uniform(4, 6), 0, 1, 0] for x1 in np.random.uniform(9, 11, 50)], axis=0)
-dataset = np.append(dataset, [[np.random.uniform(14, 15), x1, 0, 0, 1] for x1 in np.random.uniform(14, 15, 50)], axis=0)
+dataset = np.append(dataset, [[np.random.uniform(14, 15), x1, 0, 1, 0] for x1 in np.random.uniform(14, 15, 50)], axis=0)
+dataset = np.append(dataset, [[x1, np.random.uniform(4, 6), 0, 0, 1] for x1 in np.random.uniform(9, 11, 50)], axis=0)
 
 accuracy = np.zeros((20, 1))
 mean_time = 0

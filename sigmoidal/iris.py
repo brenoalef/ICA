@@ -20,8 +20,8 @@ for i in range(1):
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.80)
 
     start_time = time.clock()
-    #sig = Sigmoidal(num_features = 4, type="log")
     sig = Sigmoidal(num_features = 4)
+    #sig = Sigmoidal(num_features = 4, type="log")
     sig.fit(X_train, Y_train)
     Y_hat = sig.predict(X_test)
     mean_time += (time.clock() - start_time)/20    
@@ -39,12 +39,13 @@ cm_dark = ListedColormap(['#FFCCCC', '#CCFFCC', '#CCCCFF'])
 cm_bright = ListedColormap(plot_colors)
 for pairidx, pair in enumerate([[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]]):
     clf = Sigmoidal(num_features = 2)
+    #clf = Sigmoidal(num_features = 2, type="log")
     clf.fit(X_train[:, pair], Y_train)
     
     plt.subplot(2, 3, pairidx + 1)
     
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    x_min, x_max = X[:, pair[0]].min() - 1, X[:, pair[0]].max() + 1
+    y_min, y_max = X[:, pair[1]].min() - 1, X[:, pair[1]].max() + 1
     xx = np.array([[x, y] for x in np.arange(x_min, x_max, plot_step) for y in np.arange(y_min, y_max, plot_step)])
     plt.tight_layout(h_pad=0.5, w_pad=0.5, pad=2.5)
 
@@ -57,7 +58,7 @@ for pairidx, pair in enumerate([[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]])
 
     for i, color in zip(range(n_classes), plot_colors):
         idx = np.where(Y.argmax(axis=1) == i)
-        plt.scatter(X[idx, 0], X[idx, 1], c=color, label=iris_datasets.target_names[i],
+        plt.scatter(X[idx, pair[0]], X[idx, pair[1]], c=color, label=iris_datasets.target_names[i],
                     cmap=cm_bright, edgecolor='black', s=15)
     
 
