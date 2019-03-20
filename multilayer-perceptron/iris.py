@@ -2,10 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from sklearn import datasets
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from elm import ELM
+from mlp import MLP
+import time
 from mlxtend.plotting import plot_decision_regions
 
 
@@ -24,26 +25,24 @@ for i in range(20):
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
-      
-    elm = ELM(hidden_units = 10, activation="log")
-    #elm = ELM(hidden_units = 10, activation="tan")
-    elm.fit(X_train, Y_train)
-    Y_hat = elm.predict(X_test)
-    Y_hat = np.round(Y_hat)  
+
+    mlp = MLP(hidden_units = 10, activation="log", lr=0.01, n_iter=20)
+    #mlp = MLP(hidden_units = 8, activation="tan", lr=0.01, n_iter=20)
+    mlp.fit(X_train, Y_train)
+    Y_hat = mlp.predict(X_test)  
 
     accuracy[i] = 1 - np.sum(np.abs(np.sum(Y_hat - Y_test))) / Y_hat.size
     data.append([X_train, X_test, Y_train, Y_test, Y_hat])
 
 print("Accuracy", np.mean(accuracy))
 print("Standard Deviation (accuracy)", np.std(accuracy, axis=0))
-X_train, X_test, Y_train, Y_test, Y_hat = data[accuracy.argmax()]
+X_train, X_test, Y_train, Y_test, Y_hat = data[(np.abs(accuracy - np.mean(accuracy))).argmin()]
 
 
 conf_matrix = confusion_matrix(np.argmax(Y_test, axis=1), np.argmax(Y_hat, axis=1))
-print("Confusion Matrix")
-print(conf_matrix)
+print("Confusion Matrix", conf_matrix)
 
-labels = ["Setosa", "Versicolor", "Virginica"]
+labels = ["Others", "Setosa"]
 fig = plt.figure()
 ax = fig.add_subplot(111)
 cax = ax.matshow(conf_matrix)

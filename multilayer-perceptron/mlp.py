@@ -10,8 +10,8 @@ class MLP:
         self.n_iter = n_iter
     
     def init_weights(self, n_features, n_outputs):
-        self.w = np.random.normal(size=(n_features + 1, self.hidden_units))
-        self.m = np.random.normal(size=(self.hidden_units + 1, n_outputs))
+        self.w = np.random.uniform(0, 1, (n_features + 1, self.hidden_units))
+        self.m = np.random.uniform(0, 1, (self.hidden_units + 1, n_outputs))
 
     def __activation(self, u):
         if self.__activation == "log":
