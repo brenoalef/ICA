@@ -5,7 +5,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from elm import ELM
-from mlxtend.plotting import plot_decision_regions
+from mlxtend.plotting import plot_decision_regions, plot_confusion_matrix
 
 
 dataset = np.genfromtxt('dermatology.data', delimiter=',')
@@ -44,13 +44,7 @@ print("Confusion Matrix")
 print(conf_matrix)
 
 labels = ["Psoriasis", "Seboreic Dermatitis", "Lichen Planus", "Pityriasis Rosea", "Cronic Dermatitis", "Pityriasis Rubra Pilaris "]
-fig = plt.figure()
-ax = fig.add_subplot(111)
-cax = ax.matshow(conf_matrix)
-plt.title("Confusion Matrix")
-fig.colorbar(cax)
-ax.set_xticklabels([""] + labels)
-ax.set_yticklabels([""] + labels)
+fig, ax = plot_confusion_matrix(conf_mat=conf_matrix)
+plt.show()
 plt.xlabel("Predicted")
 plt.ylabel("Desired")
-plt.show()

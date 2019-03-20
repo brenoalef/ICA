@@ -35,7 +35,7 @@ for i in range(20):
 
 print("Accuracy", np.mean(accuracy))
 print("Standard Deviation (accuracy)", np.std(accuracy, axis=0))
-X_train, X_test, Y_train, Y_test, Y_hat = data[(np.abs(accuracy - np.mean(accuracy))).argmin()]
+X_train, X_test, Y_train, Y_test, Y_hat = data[accuracy.argmax()]
 
 
 conf_matrix = confusion_matrix(Y_test, Y_hat)
