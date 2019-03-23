@@ -9,11 +9,12 @@ from mlxtend.plotting import plot_decision_regions, plot_confusion_matrix
 
 
 dataset = np.genfromtxt('dermatology.data', delimiter=',')
-print(dataset.shape)
 dataset = dataset[~np.isnan(dataset).any(axis=1), 0:35]
-print(dataset.shape)
 X = dataset[:, 0:-2]
-Y = dataset[:, -1]
+Y = np.zeros((dataset.shape[0], 6))
+for i in range(X.shape[0]):
+    Y[i, int(dataset[i, -1]) - 1] = 1
+
 
 accuracy = np.zeros((20, 1))
 mean_time = 0
@@ -31,15 +32,15 @@ for i in range(20):
     Y_hat = elm.predict(X_test)
     Y_hat = np.round(Y_hat)  
 
-    accuracy[i] = 1 - np.sum(np.abs(np.sum(Y_hat - Y_test))) / Y_hat.size
+    accuracy[i] = np.sum(np.where(np.argmax(Y_hat, axis=1) == np.argmax(Y_test, axis=1), 1, 0))/len(Y_test)
     data.append([X_train, X_test, Y_train, Y_test, Y_hat])
 
 print("Accuracy", np.mean(accuracy))
 print("Standard Deviation (accuracy)", np.std(accuracy, axis=0))
-X_train, X_test, Y_train, Y_test, Y_hat = data[(np.abs(accuracy - np.mean(accuracy))).argmin()]
+X_train, X_test, Y_train, Y_test, Y_hat = data[accuracy.argmax()]
 
 
-conf_matrix = confusion_matrix(Y_test, Y_hat)
+conf_matrix = confusion_matrix(np.argmax(Y_test, axis=1), np.argmax(Y_hat, axis=1))
 print("Confusion Matrix")
 print(conf_matrix)
 

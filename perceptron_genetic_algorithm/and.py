@@ -14,7 +14,7 @@ dataset = np.append(dataset, [[x1, np.random.uniform(-0.2, 0.2), 0] for x1 in np
 dataset = np.append(dataset, [[np.random.uniform(-0.2, 0.2), x1, 0] for x1 in np.random.uniform(0.8, 1.2, 50)], axis=0)
 dataset = np.append(dataset, [[x1, np.random.uniform(0.8, 1.2), 1] for x1 in np.random.uniform(0.8, 1.2, 50)], axis=0)
 
-iters = 1
+iters = 20
 accuracy = np.zeros((iters, 1))
 mean_time = 0
 for i in range(iters):
@@ -40,6 +40,6 @@ print("Standard Deviation (accuracy)", np.std(accuracy, axis=0))
 plot_decision_regions(dataset[:, :2], dataset[:, -1].astype(np.integer), clf=perceptron_ga, legend=2)
 plt.xlabel("x1")
 plt.ylabel("x2")
-plt.title("XOR")
+plt.title("AND")
 plt.show()
 

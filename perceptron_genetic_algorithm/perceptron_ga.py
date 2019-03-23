@@ -20,7 +20,7 @@ class PerceptronGA:
 
     def fitness(self, individual, X, y):
         y_hat = self.__activation(individual, X)
-        return 1 - np.mean(np.abs(y_hat - y))
+        return 1 - np.mean(np.abs(y_hat - y), axis=0)
 
     def __sort_weights(self, population, X, y):
         fitnesses = {i: self.fitness(individual, X, y) for (i, individual) in enumerate(population)}
@@ -74,11 +74,11 @@ class PerceptronGA:
         return children
 
     def __mutate(self, individual, mutation_rate):
-        for chromosome in range(len(individual)):
+        for gene in range(len(individual)):
             if (random.random() < mutation_rate):
                 to_swap = np.random.choice(np.linspace(-1, 80, num=5000))
-                index=int(random.random()*len(individual[chromosome]))
-                individual[chromosome][index] = to_swap
+                index=int(random.random()*len(individual[gene]))
+                individual[gene][index] = to_swap
         return individual
 
     def __mutate_population(self, population):
