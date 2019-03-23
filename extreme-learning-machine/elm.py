@@ -22,15 +22,15 @@ class ELM:
         return H
 
     def fit(self, X, Y):
-        X = np.hstack((np.ones((X.shape[0], 1)), X))
+        X = np.hstack((-np.ones((X.shape[0], 1)), X))
         self.__init_weights(X.shape[1])
         H = self.__forward(X)
-        H = np.hstack((np.ones((H.shape[0], 1)), H))
+        H = np.hstack((-np.ones((H.shape[0], 1)), H))
         self.w = np.linalg.pinv(H).dot(Y)
         return self
 
     def predict(self, X):
-        X = np.hstack((np.ones((X.shape[0], 1)), X))
+        X = np.hstack((-np.ones((X.shape[0], 1)), X))
         H = self.__forward(X)
-        H = np.hstack((np.ones((H.shape[0], 1)), H))
+        H = np.hstack((-np.ones((H.shape[0], 1)), H))
         return H.dot(self.w)    
