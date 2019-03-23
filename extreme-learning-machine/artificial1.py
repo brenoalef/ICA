@@ -11,9 +11,9 @@ from mlxtend.plotting import plot_decision_regions
 
 
 def f(x):
-    return 2 * math.sin(x) + 3
+    return 2 * math.sin(x) + 3 + np.random.uniform(-0.4, 0.4)
 
-dataset = np.array([[x, f(x)] for x in np.linspace(-100, 100, num=500)])
+dataset = np.array([[x, f(x)] for x in np.linspace(-5, 5, num=500)])
 
 iters = 20
 mse = np.zeros((iters, 1))
@@ -27,7 +27,7 @@ for i in range(iters):
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    elm = ELM(hidden_units=80)
+    elm = ELM(hidden_units=8)
     elm.fit(X_train,Y_train)
     Y_hat = elm.predict(X_test)
 
@@ -39,11 +39,13 @@ print("Average RMSE", np.mean(rmse, axis=0))
 print("Standard Deviation (MSE)", np.std(mse, axis=0))
 print("Standard Deviation (RMSE)",np.std(rmse, axis=0))
 
-dataset[:, 0:1] = scaler.transform(dataset[:, 0:1])
+xx = dataset[:, 0:1]
+xx = scaler.transform(xx)
+yy = dataset[:, 1]
 fig, ax = plt.subplots()
-Z = elm.predict(dataset[:, 0:1])
-plt.plot(dataset[:, 0:1], Z, label="ELM output")
-plt.plot(dataset[:, 0:1], dataset[:, 1], "-", label="Expected")
+Z = elm.predict(xx)
+plt.plot(xx, Z, "-", label="ELM output")
+plt.plot(xx, yy, ".", label="Expected")
 plt.title("Visualize the data")
 leg = plt.legend(loc='lower right', ncol=2, shadow=True, fancybox=True)
 leg.get_frame().set_alpha(0.5)
